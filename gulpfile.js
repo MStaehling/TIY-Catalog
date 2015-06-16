@@ -16,6 +16,18 @@ gulp.task('sass', function(){
   .pipe(gulp.dest('dist/css/'))
 }); //END gulp.task(sass)
 
+
+var browserSync = require('browser-sync').create();
+
+gulp.task('serve', [ 'sass' ], function(){
+  browserSync.init({
+    server: "./src"
+
+  });
+  gulp.watch("src/scss/*.scss", ['sass']);
+  gulp.watch("src/*.html").on('change', browserSync.reload);
+});
+
 gulp.task('watch:sass', function(){
   gulp.watch('src/scss/*.scss', [ 'sass' ], function(){
     console.log('In your Sass files...', 'Building your CSS');
