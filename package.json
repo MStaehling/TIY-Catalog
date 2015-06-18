@@ -27,6 +27,7 @@
     "del": "^1.2.0",
     "gulp": "^3.9.0",
     "gulp-sass": "^2.0.1",
+    "gulp-useref": "^1.2.0",
     "node-sass": "^3.2.0",
     "wiredep": "^2.2.2"
   }

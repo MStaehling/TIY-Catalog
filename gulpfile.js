@@ -1,4 +1,8 @@
-var gulp = require('gulp');
+var gulp = require('gulp'),
+    useref= require('gulp-useref'),
+    sass = require('gulp-sass');
+
+
 
 gulp.task('do-something', function() {
   console.log(arguments);
@@ -7,7 +11,6 @@ gulp.task('do-something', function() {
 
 gulp.task('sass', function(){
   // node-sass src/scss/main.scss -o src/css/
-  var sass = require('gulp-sass');
 
   gulp.src('src/scss/main.scss')
   .pipe(sass())
@@ -21,7 +24,10 @@ var browserSync = require('browser-sync').create();
 
 gulp.task('serve', [ 'sass' ], function(){
   browserSync.init({
-    server: "./src"
+    server: "./src",
+    routes: {
+      '/bower_components': 'bower_components'
+    }
 
   });
   gulp.watch("src/scss/*.scss", ['sass']);
@@ -42,12 +48,22 @@ gulp.task('clean', function(done){
   del([
     'dist/**/*.*',
     'dist/**/.*',
+    'dist/*.*',
+    'dist/*',
     '!dist/.gitignore'
   ], done);
 })
 
 gulp.task('build', [ 'clean', 'sass' ], function(){
-  gulp.src(['src/*', '!src/scss'])
+  var assets = useref.assets();
+  gulp.src([
+    'src/*.html',
+    'src/css/*.css',
+    'src/js/*.js'
+    ])
   //gulp.from()
+  .pipe(assets)
+  .pipe(assets.restore())
+  .pipe(useref())
   .pipe(gulp.dest('dist/')); //gulp.into()
 });
